@@ -106,6 +106,7 @@ public class DashboardInputHandler extends AbstractHandler<Dashboard> implements
 
 	@Override
 	public void onMouseDown(MouseDownEvent event) {
+		event.preventDefault();
 		mouseDown = true;
 		mouseDownX = event.getX();
 		mouseDownY = event.getY();
@@ -124,26 +125,27 @@ public class DashboardInputHandler extends AbstractHandler<Dashboard> implements
 
 	@Override
 	public void onMouseMove(MouseMoveEvent event) {
-		if (isShiftDown && mouseDown) {
-			int diffX = event.getX() - mouseDownX;
-			int diffY = event.getY() - mouseDownY;
-			mouseDownX = event.getX();
-			mouseDownY = event.getY();
+		if (mouseDown) {
+			if (event.getNativeButton() == NativeEvent.BUTTON_MIDDLE) {
+				return;
+			}
+			if (isShiftDown) {
+				int diffX = event.getX() - mouseDownX;
+				int diffY = event.getY() - mouseDownY;
+				mouseDownX = event.getX();
+				mouseDownY = event.getY();
+				getIndex().getController().incrementRotationX(diffY);
+				getIndex().getController().incrementRotationY(diffX);
+			} else{
+				final int x = event.getX();
+				final int y = event.getY();
 
-			getIndex().getController().incrementRotationX(diffY);
-			getIndex().getController().incrementRotationY(diffX);
-
+				getIndex().getWorkspace().getWorkplane().getObjectDraggringHandler()
+						.dragSelectedObject(x, y);				
+			}
 		}
 
-		if (event.getNativeButton() == NativeEvent.BUTTON_MIDDLE) {
-			return;
-		}
 
-		final int x = event.getX();
-		final int y = event.getY();
-
-		getIndex().getWorkspace().getWorkplane().getObjectDraggringHandler()
-				.dragSelectedObject(x, y);
 	}
 
 	@Override
@@ -156,6 +158,8 @@ public class DashboardInputHandler extends AbstractHandler<Dashboard> implements
 	@Override
 	public void onMouseUp(MouseUpEvent event) {
 		mouseDown = false;
+		getIndex().getWorkspace().getWorkplane().getObjectDraggringHandler()
+		.unselectObject();
 	}
 
 	@Override

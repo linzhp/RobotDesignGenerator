@@ -5,6 +5,7 @@ import com.akjava.gwt.three.client.cameras.Camera;
 import com.akjava.gwt.three.client.core.Object3D;
 import com.akjava.gwt.three.client.core.Projector;
 import com.akjava.gwt.three.client.lights.Light;
+import com.akjava.gwt.three.client.materials.MeshLambertMaterialBuilder;
 import com.akjava.gwt.three.client.objects.Mesh;
 import com.akjava.gwt.three.client.scenes.Scene;
 import com.google.gwt.core.client.JsArray;
@@ -64,18 +65,20 @@ public class WorkplanePanel extends HTMLPanel {
 		rootComponent = THREE.Object3D();
 		scene.add(rootComponent);
 
-		plane = THREE.Mesh(THREE.PlaneGeometry(50, 50, 10, 10), THREE
-				.MeshBasicMaterial().color(0x888888).wireFrame().build());
-
-		final int rotation = 1;
-		final double angleChangeOnX = 81.0;
-		final double angleChangeOnY = 0;
-		final double angleChangeOnZ = 126.0;
-
+		plane = THREE.Mesh(THREE.PlaneGeometry(50, 50, 1, 1), THREE
+				.MeshBasicMaterial().color(0x008800).wireFrame().build());
+		
 		plane.setRotation(Math.PI/2, 0, 0);
 		plane.setPosition(0, 0, 0);
 		rootComponent.add(plane);
-
+		// Creating test cube
+		MeshLambertMaterialBuilder materialBuilder = THREE.MeshLambertMaterial();
+		materialBuilder.color(0, 0xFF, 0);
+		Mesh cube = THREE.Mesh(THREE.CubeGeometry(10, 10, 10), materialBuilder.build());
+		cube.setPosition(0, 5, 0);
+		rootComponent.add(cube);
+		meshs.push(cube);
+		
 		setupLights();
 
 		dragObjectHandler = new ObjectDraggingHandler(this);

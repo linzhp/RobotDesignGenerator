@@ -13,6 +13,7 @@ war/WEB-INF/deploy
 war/robotdesigngenerator
 war/RobotDesignGenerator
 gwt-unitCache/
+war/botprint
 
 # General files
 *.class
